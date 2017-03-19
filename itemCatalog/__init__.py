@@ -15,8 +15,13 @@ app.config.from_object(config[config_name])
 
 db.init_app(app)
 
+# just for development
 #with app.app_context():
+#    db.drop_all()
 #    db.create_all()
+#    import populateDB as p
+#    p.populateDB(db)
+    
 
 
 
