@@ -7,6 +7,7 @@ class Config(object):
 class DevConfig(Config):
     DEBUG = True
     SECRET_KEY = '\x1a\xc2@\x12\xec\xb4\xefuf\xba\xf4=\xee\xceg\xbc\xd2p\xd5q\xf1\x05\xd0\xdd'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../itemcatalog_database.db'
 
 
 class TestConfig(Config):
