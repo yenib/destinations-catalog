@@ -1,5 +1,8 @@
-from itemCatalog import app
-from flask import render_template
+from itemCatalog import app, db
+from itemCatalog.forms import CategoryForm
+from itemCatalog.models import Category
+
+from flask import flash, render_template, request, redirect, url_for
 
 
 @app.route('/')
@@ -34,12 +37,20 @@ def deleteItem(item_id):
 
 @app.route('/categories')
 def listCategories():
-    return "List of categories goes here."
+    cats = Category.query.all()
+    return render_template('categories.html', categories=cats)
 
 
-@app.route('/category/new/')
+@app.route('/category/new/', methods=['GET', 'POST'])
 def newCategory():
-    return "New Category goes here."
+    form = CategoryForm(request.form)
+    if form.validate_on_submit():
+        cat = Category(form.name.data, form.description.data)
+        db.session.add(cat)
+        db.session.commit()
+        flash('The Category was successfully created.', "success")
+        return redirect(url_for('listCategories'))
+    return render_template('newCategory.html', form=form)
 
 
 @app.route('/category/<int:category_id>/edit')
