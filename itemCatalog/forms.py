@@ -12,6 +12,7 @@ class CategoryForm(FlaskForm):
     description = TextAreaField('Description', [Optional()])
 
     def validate_name(form, field):
-        cat = Category.query.filter(Category.name.ilike(field.data)).first()
-        if cat:
-            raise ValidationError('A category with this name already exists.')
+        if field.data != field.default:
+            cat = Category.query.filter(Category.name.ilike(field.data)).first()
+            if cat:
+                raise ValidationError('A category with this name already exists.')

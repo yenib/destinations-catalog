@@ -3,6 +3,7 @@ from itemCatalog.forms import CategoryForm
 from itemCatalog.models import Category
 
 from flask import flash, render_template, request, redirect, url_for
+from werkzeug.exceptions import HTTPException, abort
 
 
 @app.route('/')
@@ -48,17 +49,40 @@ def newCategory():
         cat = Category(form.name.data, form.description.data)
         db.session.add(cat)
         db.session.commit()
-        flash('The Category was successfully created.', "success")
+        flash('The category was successfully created.', "success")
         return redirect(url_for('listCategories'))
     return render_template('newCategory.html', form=form)
 
 
-@app.route('/category/<int:category_id>/edit')
+@app.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
 def editCategory(category_id):
-    return "Edit Category goes here."
+    cat = Category.query.get_or_404(category_id)
+    form = CategoryForm(request.form, obj=cat)
+    form.name.default = cat.name
+    if form.validate_on_submit():
+        cat.name = form.name.data
+        cat.description = form.description.data
+        db.session.add(cat)
+        db.session.commit()
+        flash('The category was successfully updated.', "success")
+        return redirect(url_for('listCategories'))
+    return render_template('editCategory.html', form=form, category=cat)
 
 
-@app.route('/category/<int:category_id>/delete')
+@app.route('/category/<int:category_id>/delete', methods=['POST'])
 def deleteCategory(category_id):
-    return "Delete Category goes here."
+    cat = Category.query.get_or_404(category_id)
+    if cat.items.all():
+        flash(('The category cannot be deleted because there are '
+               'Destinations that point to it.'), "danger")
+    else:
+        db.session.delete(cat)
+        db.session.commit()
+        flash('The category was successfully deleted.', "success")
+    return redirect(url_for('listCategories'))
+
+
+
+
+
 

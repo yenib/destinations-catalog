@@ -1,17 +1,17 @@
 {% extends "mainLayout.html" %}
 {% from "_helpers.html" import render_field %}
 
-{% block page_title %}New Category{% endblock %}
+{% block page_title %}Edit Category{% endblock %}
 
 {% block content %}
-<h1>Create a New Category</h1>
-<form class="form-horizontal" method="POST" action="{{ url_for('.newCategory') }}">
+<h1>Edit Category {{ category.name }}</h1>
+<form class="form-horizontal" method="POST" action="{{ url_for('.editCategory', category_id=category.id) }}">
     {{ form.csrf_token }}
     {{ render_field(form.name, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
     {{ render_field(form.description, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-success">Create</button>
+          <button type="submit" class="btn btn-success">Update</button>
           <a class="btn btn-default" href="{{ url_for('.listCategories') }}">Cancel</a>
         </div>
     </div>

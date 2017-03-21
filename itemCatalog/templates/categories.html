@@ -1,5 +1,7 @@
 {% extends "mainLayout.html" %}
 
+{% block page_title %}List of Categories{% endblock %}
+
 {% block content %}
     <h1>Categories</h1>
     <a class="btn btn-success" href="{{ url_for('.newCategory') }}">Add Category</a>
@@ -19,7 +21,11 @@
                         <td>{{ cat.name }}</td>
                         <td>{{ cat.description }}</td>
                         <td><a href="{{ url_for('.editCategory', category_id=cat.id) }}">Edit</a></td>
-                        <td><a href="{{ url_for('.deleteCategory', category_id=cat.id) }}">Delete</a></td>
+                        <td>
+                            <form method="POST" action="{{ url_for('.deleteCategory', category_id=cat.id) }}">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
