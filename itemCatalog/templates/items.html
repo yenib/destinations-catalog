@@ -1,0 +1,9 @@
+{% extends "mainLayout.html" %}
+{% from "_helpers.html" import render_items %}
+
+{% block page_title %}List of Destinations{% endblock %}
+
+{% block content %}
+    <h1>Destinations</h1>
+    {{ render_items(items) }}
+{% endblock %}

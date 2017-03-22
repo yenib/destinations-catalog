@@ -9,7 +9,25 @@
             {{ field(class=form_class, **kwargs) }}
         </div>
         {% if field.errors %}
-            {% for error in field.errors %}<span class="help-block">{{ error|e }}</span>{% endfor %}
+            {% for error in field.errors %}<span class="help-block">{{ error }}</span>{% endfor %}
         {% endif %}
     </div>
+{% endmacro %}
+
+
+
+{% macro render_items(items, cols=3) %}
+    {% for row in items|batch(cols) %}
+        <div class="row">
+            {% for item in row %}
+                <div class="col-md-{{12//cols}} destination">
+                    <a href="{{ url_for('.showItem', item_id=item.id) }}">
+                        <p>{{ item.name }}</p>
+                        <img class="img-responsive" src="{{ url_for('.downloadFile', filename=item.image) }}" alt="{{ item.image_alt}}">
+                    </a>
+                    <p>{{ item.country }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
 {% endmacro %}

@@ -25,18 +25,23 @@ class Item(db.Model):
     name = db.Column(db.String(120))
     description = db.Column(db.Text())
     image = db.Column(db.String(255))
+    image_alt = db.Column(db.String(150))
     country = db.Column(db.String(80), nullable=False)
     location = db.Column(db.String(150))
     category_id = db.Column(db.Integer(),
                             db.ForeignKey("category.id"),
                             nullable=False)
 
-    def __init__(self, name, description, category, country, image=None):
+
+    def __init__(self, name, category, country, image="", imageAlt="",
+                 description="", location=""):
         self.name = name
-        self.description = description
-        self.category = category
+        self.category_id = category
         self.country = country
         self.image = image
+        self.image_alt = imageAlt
+        self.description = description
+        self.location = location
 
     def __repr__(self):
         return '<Item %r>' % self.name
