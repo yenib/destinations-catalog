@@ -26,7 +26,7 @@ def populateDB(dbObject):
     dbObject.session.commit()
 
     item = Item(name = "La Concha Beach",
-                category = cat1.id,
+                categoryId = cat1.id,
                 country = "Spain",
                 image = u"La-Concha.jpg",
                 description = """Lorem ipsum dolor sit amet, consectetur
@@ -68,7 +68,7 @@ def populateDB(dbObject):
     
 
     item = Item(name = "Bondi Beach",
-                category = cat1.id,
+                categoryId = cat1.id,
                 country = "Australia",
                 image = u"Bondi-beach.jpg",
                 description = """Integer molestie, tellus sit amet
@@ -103,7 +103,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "Playa del Amor",
-                category = cat1.id,
+                categoryId = cat1.id,
                 country = "Mexico",
                 image = u"playa-del-mayor-hidden-beach.jpg",
                 description = """Nam a mattis dolor, at dignissim ante. Duis
@@ -127,7 +127,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "Cathedrals Beach",
-                category = cat1.id,
+                categoryId = cat1.id,
                 country = "Spain",
                 image = "Cathedrals Beach.jpg",
                 description = """Integer molestie, tellus sit amet elementum
@@ -161,7 +161,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "Bowman's Beach",
-                category = cat1.id,
+                categoryId = cat1.id,
                 country = "United States",
                 image = u"Bowman_s_Beach.jpg",
                 description = """Lorem ipsum dolor sit amet, consectetur
@@ -189,7 +189,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = u"The Mosque–Cathedral of Córdoba",
-                category = cat3.id,
+                categoryId = cat3.id,
                 country = "Spain",
                 image = u"Mezquita_de_Córdoba_desde_el_aire.jpg",
                 description = """Lorem ipsum dolor sit amet, consectetur
@@ -217,7 +217,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "Basilica of the Sagrada Familia",
-                category = cat3.id,
+                categoryId = cat3.id,
                 country = "Spain",
                 image = u"Sagrada_Familia.jpg",
                 description = """Integer molestie, tellus sit amet elementum
@@ -252,7 +252,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "The Acropolis of Athens",
-                category = cat3.id,
+                categoryId = cat3.id,
                 country = "Greece",
                 image = u"View_of_the_Acropolis_Athens.jpg",
                 description = """Nam a mattis dolor, at dignissim ante. Duis
@@ -277,7 +277,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "Alcatraz Island",
-                category = cat3.id,
+                categoryId = cat3.id,
                 country = "United States",
                 image = u"Alcatraz_Island_photo_D_Ramey_Logan.jpg",
                 description = """Lorem ipsum dolor sit amet, consectetur
@@ -319,7 +319,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "Petra",
-                category = cat3.id,
+                categoryId = cat3.id,
                 country = "Jordan",
                 image = u"Petra_Jordan.jpg",
                 description = """Nam a mattis dolor, at dignissim ante. Duis
@@ -343,7 +343,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "The Louvre",
-                category = cat2.id,
+                categoryId = cat2.id,
                 country = "France",
                 image = u"Le_Louvre_-_Aile_Richelieu.jpg",
                 description = """Integer molestie, tellus sit amet elementum
@@ -378,7 +378,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "The American Museum of Natural History",
-                category = cat2.id,
+                categoryId = cat2.id,
                 country = "United States",
                 image = u"USA-NYC-American_Museum_of_Natural_History.jpg",
                 description = """Nam a mattis dolor, at dignissim ante. Duis
@@ -403,7 +403,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "Museum of Modern Art",
-                category = cat2.id,
+                categoryId = cat2.id,
                 country = "United States",
                 image = u"MoMa_NY_USA.jpg",
                 description = """Integer molestie, tellus sit amet
@@ -438,7 +438,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "Egyptian Museum or Museum of Cairo",
-                category = cat2.id,
+                categoryId = cat2.id,
                 country = "Egypt",
                 image = u"The_Egyptian_Museum.jpg",
                 description = """Nam a mattis dolor, at dignissim ante. Duis
@@ -463,7 +463,7 @@ def populateDB(dbObject):
     
 
     item = Item(name = "Tate Modern",
-                category = cat2.id,
+                categoryId = cat2.id,
                 country = "UK",
                 image = u"Tate_Modern_viewed_from_Thames.jpg",
                 description = """Integer molestie, tellus sit amet
@@ -498,7 +498,7 @@ def populateDB(dbObject):
 
 
     item = Item(name = "The National Zoological Gardens of South Africa",
-                category = cat6.id,
+                categoryId = cat6.id,
                 country = "South Africa",
                 image = "The National Zoological Gardens of South Africa.jpg",
                 description = """Lorem ipsum dolor sit amet, consectetur

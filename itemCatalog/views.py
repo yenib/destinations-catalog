@@ -8,9 +8,10 @@ from flask import (flash, render_template, request,
                    redirect, url_for, send_from_directory)
 
 from werkzeug.utils import secure_filename
-from werkzeug.datastructures import CombinedMultiDict
+from werkzeug.datastructures import CombinedMultiDict, FileStorage
 
 from sqlalchemy.orm import defer
+from sqlalchemy.sql.expression import and_
 
 
 def getChoicesOfCategorySelect():
@@ -29,6 +30,12 @@ def saveFile(file, filename):
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
 
+def removeFile(filename):
+    file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if os.path.isfile(file):
+        os.remove(file)
+
+        
 
 @app.route('/picture/<path:filename>')
 def downloadFile(filename):
@@ -53,7 +60,7 @@ def newItem():
         filename = secure_filename(form.image.data.filename)
         saveFile(form.image.data, filename)
         item = Item(name=form.name.data,
-                    category=form.category.data,
+                    categoryId=form.category.data,
                     country=form.country.data,
                     description=form.description.data,
                     location=form.location.data,
@@ -69,22 +76,55 @@ def newItem():
 
 @app.route('/destination/<int:item_id>/')
 def showItem(item_id):
-    return "Show Destination goes here."
+    item = Item.query.get_or_404(item_id)
+    relatedItems = Item.query.options(defer("description")).filter(
+                        and_(Item.country.ilike(item.country),
+                             Item.id != item.id)).order_by(
+                                Item.id.desc()).limit(3).all()
+    return render_template('showItem.html', item=item,
+                           relatedItems=relatedItems)
 
 
 
-@app.route('/destination/<int:item_id>/edit')
+@app.route('/destination/<int:item_id>/edit', methods=['GET', 'POST'])
 def editItem(item_id):
-    return "Edit Destination goes here."
+    item = Item.query.get_or_404(item_id)
+    form = ItemForm(CombinedMultiDict((request.files, request.form)), obj=item)
+    form.category.choices = getChoicesOfCategorySelect()
+    form.image.default = item.image
+    if request.method == 'GET':
+        form.category.default = item.categoryId
+        form.category.process([])
+    elif form.validate():
+        if isinstance(form.image.data, FileStorage) and form.image.data:
+            filename = secure_filename(form.image.data.filename)
+            removeFile(item.image)
+            saveFile(form.image.data, filename)
+            item.image = filename
+        
+        item.name = form.name.data
+        item.categoryId = form.category.data
+        item.coutry = form.country.data
+        item.description = form.description.data
+        item.location = form.location.data
+        item.imageAlt = form.imageAlt.data
+        db.session.add(item)
+        db.session.commit()
+        flash('The destination was successfully updated.', "success")
+        return redirect(url_for('showItem', item_id=item.id))
+    return render_template('editItem.html', form=form, item=item)
 
 
 
-@app.route('/destination/<int:item_id>/delete')
+@app.route('/destination/<int:item_id>/delete', methods=['POST'])
 def deleteItem(item_id):
-    return "Delete Destination goes here."
-
-
-
+    item = Item.query.get_or_404(item_id)
+    removeFile(item.image)
+    db.session.delete(item)
+    db.session.commit()
+    flash('The destination was successfully deleted.', "success")
+    return redirect(url_for('home'))
+    
 
 
 @app.route('/categories')

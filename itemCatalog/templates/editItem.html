@@ -1,0 +1,25 @@
+{% extends "mainLayout.html" %}
+{% from "_helpers.html" import render_field %}
+
+{% block page_title %}Edit Destination{% endblock %}
+
+{% block content %}
+<h1>Edit Destination</h1>
+<form enctype="multipart/form-data" class="form-horizontal" method="POST" action="{{ url_for('.editItem', item_id=item.id) }}">
+    {{ form.csrf_token }}
+    {{ render_field(form.name, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+    {{ render_field(form.country, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+    {{ render_field(form.location, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+    {{ render_field(form.category, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+    {{ render_field(form.image, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+    <p>Current picture: {{ item.image }}</p>
+    {{ render_field(form.imageAlt, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+    {{ render_field(form.description, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-success">Update</button>
+          <a class="btn btn-default" href="{{ url_for('.home') }}">Cancel</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

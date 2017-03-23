@@ -25,21 +25,21 @@ class Item(db.Model):
     name = db.Column(db.String(120))
     description = db.Column(db.Text())
     image = db.Column(db.String(255))
-    image_alt = db.Column(db.String(150))
+    imageAlt = db.Column(db.String(150))
     country = db.Column(db.String(80), nullable=False)
     location = db.Column(db.String(150))
-    category_id = db.Column(db.Integer(),
+    categoryId = db.Column(db.Integer(),
                             db.ForeignKey("category.id"),
                             nullable=False)
 
 
-    def __init__(self, name, category, country, image="", imageAlt="",
+    def __init__(self, name, categoryId, country, image="", imageAlt="",
                  description="", location=""):
         self.name = name
-        self.category_id = category
+        self.categoryId = categoryId
         self.country = country
         self.image = image
-        self.image_alt = imageAlt
+        self.imageAlt = imageAlt
         self.description = description
         self.location = location
 

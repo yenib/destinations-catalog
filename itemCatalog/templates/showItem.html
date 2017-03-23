@@ -1,0 +1,23 @@
+{% extends "mainLayout.html" %}
+{% from "_helpers.html" import render_items %}
+
+{% block page_title %}{{ item.name }}{% endblock %}
+
+{% block content %}
+    <h1>{{ item.name }}</h1>
+    <p>{{ item.country }}</p>
+    <p>{{ item.location }}</p>
+    <p>{{ item.category.name }}</p>
+    <img class="img-responsive" src="{{ url_for('.downloadFile', filename=item.image) }}" alt="{{ item.imageAlt}}">
+    <p>{{ item.description }}</p>
+
+    <a href="{{ url_for('.editItem', item_id=item.id) }}" class="btn btn-success" role="button">Edit Destination</a>
+    <form method="POST" action="{{ url_for('.deleteItem', item_id=item.id) }}">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+
+    <br>
+    <h2>Other destinations in this country...</h2>
+    {{ render_items(relatedItems) }}
+
+{% endblock %}

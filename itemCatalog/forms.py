@@ -28,16 +28,23 @@ class ItemForm(FlaskForm):
     country = StringField('Country', [InputRequired(), Length(max=80)])
     location = StringField('Location', [Optional(), Length(max=150)])
     category = SelectField('Category', choices=[], coerce=int)
-    image = FileField('Picture', [FileRequired(),
-                FileAllowed(app.config['UPLOADS_ALLOWED_IMAGES'],
-                    'Invalid image (valids: %s).' % ", ".join(
-                        str(ext) for ext in app.config['UPLOADS_ALLOWED_IMAGES']))])
+    image = FileField('Picture', [FileAllowed(
+        app.config['UPLOADS_ALLOWED_IMAGES'],
+            'Invalid image (valids: %s).' % ", ".join(
+                str(ext) for ext in app.config['UPLOADS_ALLOWED_IMAGES']))])
     imageAlt = StringField('Picture Alt', [Optional(), Length(max=150)])
 
 
     def validate_category(form, field):
         if not field.data or field.data == 0:
             raise ValidationError("This field is required.")
+
+
+    def validate_image(form, field):
+        if not field.default:
+            required = FileRequired()
+            required(form, field)
+                
 
 
 
