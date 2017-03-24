@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from itemCatalog.models import Category, Item
+from itemCatalog.models import Category, Item, User
 
 
 def populateDB(dbObject):
+
+    user = User("u@u.com", "pwu@u.com")
+    dbObject.session.add(user)
+    dbObject.session.commit()
 
     cat1 = Category("Beach",
                    "Best places to surf, dive swim and get a natural tan.")

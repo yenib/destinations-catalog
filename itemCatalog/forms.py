@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
-from wtforms import StringField, TextAreaField, SelectField
+from wtforms import StringField, TextAreaField, SelectField, PasswordField
 from wtforms.validators import InputRequired, Optional, Length, ValidationError 
 
 from itemCatalog import app
-from itemCatalog.models import Category
+from itemCatalog.models import Category, User
 
 
 
@@ -47,5 +47,14 @@ class ItemForm(FlaskForm):
                 
 
 
+class LoginForm(FlaskForm):
+    email = StringField('Email', [InputRequired(), Length(max=120)])
+    password = PasswordField('Password', [InputRequired(), Length(max=160)]) 
 
+    def validate_email(form, field):
+        user = User.query.filter_by(email=field.data).first()
+        if not user or user.password != form.password.data:
+            raise ValidationError('Invalid username or password.')
+
+    
         

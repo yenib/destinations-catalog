@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 
+from flask_login.mixins import AnonymousUserMixin
+
 
 db = SQLAlchemy()
 
@@ -54,6 +56,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     picture = db.Column(db.String(255))
+    active = db.Column(db.Boolean, default=False)
 
     def __init__(self, email, password):
         self.email = email
@@ -61,3 +64,28 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.email
+
+
+    #Flask-Login required implementations
+    def is_authenticated(self):
+        if isinstance(self, AnonymousUserMixin):
+            return False
+        else:
+            return True
+
+        
+    def is_active(self):
+        #self.active
+        return True
+
+
+    def is_anonymous(self):
+        if isinstance(self, AnonymousUserMixin):
+            return True
+        else:
+            return False
+
+
+    def get_id(self):
+        return unicode(self.id)
+    #/Flask-Login required implementations

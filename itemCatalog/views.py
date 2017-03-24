@@ -1,11 +1,14 @@
 import os
 
 from itemCatalog import app, db
-from itemCatalog.forms import CategoryForm, ItemForm
-from itemCatalog.models import Category, Item
+from itemCatalog.forms import CategoryForm, ItemForm, LoginForm
+from itemCatalog.models import Category, Item, User
 
 from flask import (flash, render_template, request,
                    redirect, url_for, send_from_directory)
+
+from  flask_login.utils import login_required, login_user, logout_user
+
 
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import CombinedMultiDict, FileStorage
@@ -177,6 +180,23 @@ def deleteCategory(category_id):
 
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm(request.form)
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).one()
+        login_user(user)
+
+        flash('Logged in successfully.', 'success')
+
+        return redirect(url_for('home'))
+    return render_template('login.html', form=form)
 
 
 
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("You have been logged out.", "success")
+    return redirect(url_for('home'))

@@ -1,0 +1,17 @@
+{% extends "mainLayout.html" %}
+{% from "_helpers.html" import render_field %}
+
+{% block page_title %}Login{% endblock %}
+
+{% block content %}
+<form class="form-horizontal" method="POST" action="{{ url_for('.login') }}">
+    {{ form.csrf_token }}
+    {{ render_field(form.email, labelClass="col-sm-2", wrapElemClass="col-sm-5") }}
+    {{ render_field(form.password, labelClass="col-sm-2", wrapElemClass="col-sm-5") }}
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-5">
+          <button type="submit" class="btn btn-success">Login</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
