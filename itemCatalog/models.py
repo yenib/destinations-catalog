@@ -33,12 +33,14 @@ class Item(db.Model):
     categoryId = db.Column(db.Integer(),
                             db.ForeignKey("category.id"),
                             nullable=False)
+    userId = db.Column(db.Integer(),
+                            db.ForeignKey("user.id"),
+                            nullable=False)
 
 
-    def __init__(self, name, categoryId, country, image="", imageAlt="",
+    def __init__(self, name, country, image="", imageAlt="",
                  description="", location=""):
         self.name = name
-        self.categoryId = categoryId
         self.country = country
         self.image = image
         self.imageAlt = imageAlt
@@ -49,6 +51,15 @@ class Item(db.Model):
         return '<Item %r>' % self.name
 
 
+
+roles = db.Table(
+    'role_users',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('role_id', db.Integer, db.ForeignKey('role.id'), primary_key=True)
+)
+
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
@@ -57,6 +68,9 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     picture = db.Column(db.String(255))
     active = db.Column(db.Boolean, default=False)
+    items = db.relationship('Item', backref = "user", lazy = "dynamic")
+    roles = db.relationship('Role', secondary=roles,
+                            backref=db.backref('users', lazy='dynamic'))
 
     def __init__(self, email, password):
         self.email = email
@@ -89,3 +103,18 @@ class User(db.Model):
     def get_id(self):
         return unicode(self.id)
     #/Flask-Login required implementations
+
+
+
+
+class Role(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+    def __repr__(self):
+        return '<Role %r>' % self.name     

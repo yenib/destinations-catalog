@@ -1,6 +1,14 @@
 from flask_login.login_manager import LoginManager
 
+from flask_principal import Principal, Permission, RoleNeed
+
 from itemCatalog.models import User
+
+
+
+principals = Principal()
+admin_permission = Permission(RoleNeed('admin'))
+default_user_permission = Permission(RoleNeed('user'))
 
 
 

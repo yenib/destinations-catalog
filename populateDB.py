@@ -1,13 +1,26 @@
 # -*- coding: utf-8 -*-
 
-from itemCatalog.models import Category, Item, User
+from itemCatalog.models import Category, Item, User, Role
 
 
 def populateDB(dbObject):
 
-    user = User("u@u.com", "pwu@u.com")
-    dbObject.session.add(user)
+    role1 = Role(name = "admin", description = "The Admin role")
+    role2 = Role(name = "user", description = "The Common User role")
+    dbObject.session.add(role1)
+    dbObject.session.add(role2)
     dbObject.session.commit()
+
+    user1 = User("admin@admin.com", "pwadmin@admin.com")
+    user1.roles.append(role1)
+    
+    user2 = User("u@u.com", "pwu@u.com")
+    user2.roles.append(role2)
+
+    dbObject.session.add(user1)
+    dbObject.session.add(user2)
+    dbObject.session.commit()
+
 
     cat1 = Category("Beach",
                    "Best places to surf, dive swim and get a natural tan.")
@@ -30,7 +43,6 @@ def populateDB(dbObject):
     dbObject.session.commit()
 
     item = Item(name = "La Concha Beach",
-                categoryId = cat1.id,
                 country = "Spain",
                 image = u"La-Concha.jpg",
                 description = """Lorem ipsum dolor sit amet, consectetur
@@ -67,12 +79,13 @@ def populateDB(dbObject):
                 aliquet arcu aliquam. Nunc ac pharetra mi. In hac habitasse
                 platea dictumst. """)
     item.location = u"San Sebastián"
+    item.categoryId = cat1.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
     
 
     item = Item(name = "Bondi Beach",
-                categoryId = cat1.id,
                 country = "Australia",
                 image = u"Bondi-beach.jpg",
                 description = """Integer molestie, tellus sit amet
@@ -101,13 +114,14 @@ def populateDB(dbObject):
                 Quisque est magna, consequat sit amet semper quis, tempus
                 non metus.""")
     item.location = "Sydney, New South Wales"
+    item.categoryId = cat1.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
     
 
 
     item = Item(name = "Playa del Amor",
-                categoryId = cat1.id,
                 country = "Mexico",
                 image = u"playa-del-mayor-hidden-beach.jpg",
                 description = """Nam a mattis dolor, at dignissim ante. Duis
@@ -126,12 +140,13 @@ def populateDB(dbObject):
                 lacus quis, porta aliquet sem. Vestibulum vel vulputate
                 sapien. Nam luctus ex ut pulvinar lobortis.""")
     item.location = "Marietas Islands"
+    item.categoryId = cat1.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
     item = Item(name = "Cathedrals Beach",
-                categoryId = cat1.id,
                 country = "Spain",
                 image = "Cathedrals Beach.jpg",
                 description = """Integer molestie, tellus sit amet elementum
@@ -160,12 +175,13 @@ def populateDB(dbObject):
                 quis lectus. Quisque est magna, consequat sit amet semper
                 quis, tempus non metus.""")
     item.location = "Ribadeo"
+    item.categoryId = cat1.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
     item = Item(name = "Bowman's Beach",
-                categoryId = cat1.id,
                 country = "United States",
                 image = u"Bowman_s_Beach.jpg",
                 description = """Lorem ipsum dolor sit amet, consectetur
@@ -187,13 +203,14 @@ def populateDB(dbObject):
                 mattis, lectus eu varius efficitur, leo turpis euismod
                 quam, eu bibendum sapien tellus ut libero.""")
     item.location = "Sanibel Island, Florida"
+    item.categoryId = cat1.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
 
     item = Item(name = u"The Mosque–Cathedral of Córdoba",
-                categoryId = cat3.id,
                 country = "Spain",
                 image = u"Mezquita_de_Córdoba_desde_el_aire.jpg",
                 description = """Lorem ipsum dolor sit amet, consectetur
@@ -215,13 +232,14 @@ def populateDB(dbObject):
                 mattis, lectus eu varius efficitur, leo turpis euismod
                 quam, eu bibendum sapien tellus ut libero.""")
     item.location = u"Córdoba"
+    item.category = cat3
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
 
     item = Item(name = "Basilica of the Sagrada Familia",
-                categoryId = cat3.id,
                 country = "Spain",
                 image = u"Sagrada_Familia.jpg",
                 description = """Integer molestie, tellus sit amet elementum
@@ -250,13 +268,14 @@ def populateDB(dbObject):
                 quis lectus. Quisque est magna, consequat sit amet semper
                 quis, tempus non metus.""")
     item.location = "Barcelona"
+    item.categoryId = cat3.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
 
     item = Item(name = "The Acropolis of Athens",
-                categoryId = cat3.id,
                 country = "Greece",
                 image = u"View_of_the_Acropolis_Athens.jpg",
                 description = """Nam a mattis dolor, at dignissim ante. Duis
@@ -275,13 +294,14 @@ def populateDB(dbObject):
                 lacus quis, porta aliquet sem. Vestibulum vel vulputate
                 sapien. Nam luctus ex ut pulvinar lobortis.""")
     item.location = "Athens"
+    item.categoryId = cat3.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
 
     item = Item(name = "Alcatraz Island",
-                categoryId = cat3.id,
                 country = "United States",
                 image = u"Alcatraz_Island_photo_D_Ramey_Logan.jpg",
                 description = """Lorem ipsum dolor sit amet, consectetur
@@ -318,12 +338,13 @@ def populateDB(dbObject):
                 aliquet arcu aliquam. Nunc ac pharetra mi. In hac habitasse
                 platea dictumst. """)
     item.location = "San Francisco, California"
+    item.category = cat3
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
     item = Item(name = "Petra",
-                categoryId = cat3.id,
                 country = "Jordan",
                 image = u"Petra_Jordan.jpg",
                 description = """Nam a mattis dolor, at dignissim ante. Duis
@@ -341,13 +362,14 @@ def populateDB(dbObject):
                 nulla in, bibendum purus. Nunc ligula velit, consectetur nec
                 lacus quis, porta aliquet sem. Vestibulum vel vulputate
                 sapien. Nam luctus ex ut pulvinar lobortis.""")
+    item.categoryId = cat3.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
 
     item = Item(name = "The Louvre",
-                categoryId = cat2.id,
                 country = "France",
                 image = u"Le_Louvre_-_Aile_Richelieu.jpg",
                 description = """Integer molestie, tellus sit amet elementum
@@ -376,13 +398,14 @@ def populateDB(dbObject):
                 quis lectus. Quisque est magna, consequat sit amet semper
                 quis, tempus non metus.""")
     item.location = "Paris"
+    item.categoryId = cat2.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
 
     item = Item(name = "The American Museum of Natural History",
-                categoryId = cat2.id,
                 country = "United States",
                 image = u"USA-NYC-American_Museum_of_Natural_History.jpg",
                 description = """Nam a mattis dolor, at dignissim ante. Duis
@@ -401,13 +424,14 @@ def populateDB(dbObject):
                 lacus quis, porta aliquet sem. Vestibulum vel vulputate
                 sapien. Nam luctus ex ut pulvinar lobortis.""")
     item.location = "New York"
+    item.categoryId = cat2.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
 
     item = Item(name = "Museum of Modern Art",
-                categoryId = cat2.id,
                 country = "United States",
                 image = u"MoMa_NY_USA.jpg",
                 description = """Integer molestie, tellus sit amet
@@ -436,13 +460,14 @@ def populateDB(dbObject):
                 Quisque est magna, consequat sit amet semper quis, tempus
                 non metus.""")
     item.location = "New York"
+    item.categoryId = cat2.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
 
     item = Item(name = "Egyptian Museum or Museum of Cairo",
-                categoryId = cat2.id,
                 country = "Egypt",
                 image = u"The_Egyptian_Museum.jpg",
                 description = """Nam a mattis dolor, at dignissim ante. Duis
@@ -461,13 +486,14 @@ def populateDB(dbObject):
                 lacus quis, porta aliquet sem. Vestibulum vel vulputate
                 sapien. Nam luctus ex ut pulvinar lobortis.""")
     item.location = "Cairo"
+    item.categoryId = cat2.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
     
 
     item = Item(name = "Tate Modern",
-                categoryId = cat2.id,
                 country = "UK",
                 image = u"Tate_Modern_viewed_from_Thames.jpg",
                 description = """Integer molestie, tellus sit amet
@@ -496,13 +522,14 @@ def populateDB(dbObject):
                 Quisque est magna, consequat sit amet semper quis, tempus
                 non metus.""")
     item.location = "London"
+    item.categoryId = cat2.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
 
 
 
     item = Item(name = "The National Zoological Gardens of South Africa",
-                categoryId = cat6.id,
                 country = "South Africa",
                 image = "The National Zoological Gardens of South Africa.jpg",
                 description = """Lorem ipsum dolor sit amet, consectetur
@@ -539,5 +566,7 @@ def populateDB(dbObject):
                 aliquet arcu aliquam. Nunc ac pharetra mi. In hac habitasse
                 platea dictumst. """)
     item.location = "Pretoria"
+    item.categoryId = cat6.id
+    item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()

@@ -3,11 +3,15 @@ import os
 from itemCatalog import app, db
 from itemCatalog.forms import CategoryForm, ItemForm, LoginForm
 from itemCatalog.models import Category, Item, User
+from itemCatalog.extensions import admin_permission
 
-from flask import (flash, render_template, request,
-                   redirect, url_for, send_from_directory)
+from flask import (flash, render_template, request, abort,
+                   redirect, url_for, send_from_directory, current_app)
 
-from  flask_login.utils import login_required, login_user, logout_user
+from flask_login.utils import (login_required, login_user,
+                               logout_user, current_user)
+from flask_principal import (identity_changed, AnonymousIdentity, Identity,
+                             Permission, UserNeed)
 
 
 from werkzeug.utils import secure_filename
@@ -56,19 +60,23 @@ def home():
 
 
 @app.route('/destination/new/', methods=['GET', 'POST'])
+#@login_required
 def newItem():
     form = ItemForm(CombinedMultiDict((request.files, request.form)))    
     form.category.choices = getChoicesOfCategorySelect()
     if form.validate_on_submit():
         filename = secure_filename(form.image.data.filename)
         saveFile(form.image.data, filename)
+
         item = Item(name=form.name.data,
-                    categoryId=form.category.data,
                     country=form.country.data,
                     description=form.description.data,
                     location=form.location.data,
                     image=filename,
                     imageAlt = form.imageAlt.data)
+        item.categoryId=form.category.data
+        item.userId = current_user.id
+
         db.session.add(item)
         db.session.commit()
         flash('The destination was successfully created.', "success")
@@ -90,47 +98,61 @@ def showItem(item_id):
 
 
 @app.route('/destination/<int:item_id>/edit', methods=['GET', 'POST'])
+#@login_required
 def editItem(item_id):
     item = Item.query.get_or_404(item_id)
-    form = ItemForm(CombinedMultiDict((request.files, request.form)), obj=item)
-    form.category.choices = getChoicesOfCategorySelect()
-    form.image.default = item.image
-    if request.method == 'GET':
-        form.category.default = item.categoryId
-        form.category.process([])
-    elif form.validate():
-        if isinstance(form.image.data, FileStorage) and form.image.data:
-            filename = secure_filename(form.image.data.filename)
-            removeFile(item.image)
-            saveFile(form.image.data, filename)
-            item.image = filename
-        
-        item.name = form.name.data
-        item.categoryId = form.category.data
-        item.coutry = form.country.data
-        item.description = form.description.data
-        item.location = form.location.data
-        item.imageAlt = form.imageAlt.data
-        db.session.add(item)
-        db.session.commit()
-        flash('The destination was successfully updated.', "success")
-        return redirect(url_for('showItem', item_id=item.id))
-    return render_template('editItem.html', form=form, item=item)
+
+    permission = Permission(UserNeed(item.userId))
+    if permission.can():
+        form = ItemForm(CombinedMultiDict((request.files, request.form)), obj=item)
+        form.category.choices = getChoicesOfCategorySelect()
+        form.image.default = item.image
+        if request.method == 'GET':
+            form.category.default = item.categoryId
+            form.category.process([])
+        elif form.validate():
+            if isinstance(form.image.data, FileStorage) and form.image.data:
+                filename = secure_filename(form.image.data.filename)
+                removeFile(item.image)
+                saveFile(form.image.data, filename)
+                item.image = filename
+            
+            item.name = form.name.data
+            item.categoryId = form.category.data
+            item.coutry = form.country.data
+            item.description = form.description.data
+            item.location = form.location.data
+            item.imageAlt = form.imageAlt.data
+            db.session.add(item)
+            db.session.commit()
+            flash('The destination was successfully updated.', "success")
+            return redirect(url_for('showItem', item_id=item.id))
+        return render_template('editItem.html', form=form, item=item)
+    else:
+        abort(403)
 
 
 
 @app.route('/destination/<int:item_id>/delete', methods=['POST'])
+#@login_required
 def deleteItem(item_id):
     item = Item.query.get_or_404(item_id)
-    removeFile(item.image)
-    db.session.delete(item)
-    db.session.commit()
-    flash('The destination was successfully deleted.', "success")
-    return redirect(url_for('home'))
+
+    permission = Permission(UserNeed(item.userId))
+    if permission.can():
+        removeFile(item.image)
+        db.session.delete(item)
+        db.session.commit()
+        flash('The destination was successfully deleted.', "success")
+        return redirect(url_for('home'))
+    else:
+        abort(403)
     
 
 
 @app.route('/categories')
+#@login_required
+#@admin_permission.require(http_exception=403)
 def listCategories():
     cats = Category.query.all()
     return render_template('categories.html', categories=cats)
@@ -138,6 +160,8 @@ def listCategories():
 
 
 @app.route('/category/new/', methods=['GET', 'POST'])
+#@login_required
+#@admin_permission.require(http_exception=403)
 def newCategory():
     form = CategoryForm(request.form)
     if form.validate_on_submit():
@@ -151,6 +175,8 @@ def newCategory():
 
 
 @app.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
+#@login_required
+#@admin_permission.require(http_exception=403)
 def editCategory(category_id):
     cat = Category.query.get_or_404(category_id)
     form = CategoryForm(request.form, obj=cat)
@@ -167,6 +193,8 @@ def editCategory(category_id):
 
 
 @app.route('/category/<int:category_id>/delete', methods=['POST'])
+#@login_required
+#@admin_permission.require(http_exception=403)
 def deleteCategory(category_id):
     cat = Category.query.get_or_404(category_id)
     if cat.items.first():
@@ -186,6 +214,8 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).one()
         login_user(user)
+        identity_changed.send(current_app._get_current_object(),
+                              identity=Identity(user.id))
 
         flash('Logged in successfully.', 'success')
 
@@ -198,5 +228,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    identity_changed.send(current_app._get_current_object(),
+                          identity=AnonymousIdentity())
     flash("You have been logged out.", "success")
     return redirect(url_for('home'))
