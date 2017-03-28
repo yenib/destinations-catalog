@@ -18,7 +18,25 @@
         </div>
     </div>
     <div class="col-md-9">
-        <h1>Latest destinations No search results.</h1>
+        {% if request.endpoint == 'home' %}
+            {% if items %}
+                <h1>Latest destinations</h1>
+            {% else %}
+                <h1>No destinations found</h1>
+            {% endif %}
+        {% elif request.endpoint == 'listItemsByCategory' %}
+            {% if items %}
+                <h1>Destinations by category</h1>
+            {% else %}
+                <h1>No destinations in this category</h1>
+            {% endif %}
+        {% else %}
+            {% if items %}
+                <h1>Search results</h1>
+            {% else %}
+                <h1>No search results</h1>
+            {% endif %}
+        {% endif %}
         {{ render_items(items) }}
     </div>
 </div>

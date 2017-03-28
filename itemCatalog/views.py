@@ -18,7 +18,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import CombinedMultiDict, FileStorage
 
 from sqlalchemy.orm import defer
-from sqlalchemy.sql.expression import and_
+from sqlalchemy.sql.expression import and_, or_
 
 
 def getChoicesOfCategorySelect():
@@ -219,6 +219,22 @@ def deleteCategory(category_id):
 def listItemsByCategory(category_id):
     items = Item.query.options(defer("description")).filter(
                 Item.categoryId == category_id).order_by(Item.id.desc()).all()
+    categories = Category.query.all()
+    return render_template("items.html", items=items, categories=categories)
+
+
+
+@app.route('/category')
+def searchItems():
+    search_term = request.args.get('search', '')
+
+    items = []
+    if search_term:
+        items = Item.query.options(defer("description")).filter(    
+                    or_(Item.country.ilike("%" + search_term + "%"),
+                        Item.name.ilike("%" + search_term + "%"))).order_by(
+                            Item.id.desc()).all()
+
     categories = Category.query.all()
     return render_template("items.html", items=items, categories=categories)
 
