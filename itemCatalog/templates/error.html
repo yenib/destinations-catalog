@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ errorCode }} - Destinations Catalog</title>
+
+    <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Quattrocento" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{{url_for('static', filename='css/styles.css')}}" rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <div class="row">
+                <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <div class="navbar-brand">
+                                <a href="{{ url_for('home') }}"><h1>Destinati<i class="fa fa-globe" aria-hidden="true"></i>ns Catalog</h1></a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </header>
+
+    <div class="container">
+        <dir class="row">
+            <div class="col-md-12">
+                <div class="app-error">
+                    {% if errorCode == 404 %}
+                        <span class="fa-stack">
+                            <i class="fa fa-file-o fa-stack-2x"></i>
+                            <strong class="fa-stack-1x stack-text-404">404</strong>
+                        </span>
+                        <h1>Not Found</h1>
+                    {% endif %}
+
+                    {% if errorCode == 505 %}
+                        <span class="fa-stack">
+                            <i class="fa fa-bomb fa-stack-2x"></i>
+                            <strong class="fa-stack-1x stack-text-505 fa-inverse">505</strong>
+                        </span>
+                        <h1>Unexpected Error</h1>
+                    {% endif %}
+
+                    {% if errorCode == 403 %}
+                        <span class="fa-stack">
+                            <i class="fa fa-hand-paper-o fa-stack-2x"></i>
+                            <strong class="fa-stack-1x stack-text-403">403</strong>
+                        </span>
+                        <h1>Access Denied</h1>
+                    {% endif %}
+
+                    {% if errorCode == 413 %}
+                        <span class="fa-stack">
+                            <i class="fa fa-chain-broken fa-stack-2x"></i>
+                            <strong class="fa-stack-1x stack-text-413">413</strong>
+                        </span>
+                        <h1>Too Large</h1>
+                    {% endif %}
+                </div>
+            </div>
+        </dir>
+    </div><!-- /.container -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Destinations Catalog Application</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+    </script>
+    <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+</body>
+
+</html>

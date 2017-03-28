@@ -13,7 +13,8 @@
             {{ render_field(form.country, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
             {{ render_field(form.location, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
             {{ render_field(form.category, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
-            {{ render_field(form.image, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+            {{ render_field(form.image, labelClass="col-sm-2", wrapElemClass="col-sm-8",
+                                        helpMsg="Maximun allowed size: %i MB" % (config['MAX_CONTENT_LENGTH']/1024/1024)) }}
             {{ render_field(form.image_alt, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
             {{ render_field(form.description, labelClass="col-sm-2", wrapElemClass="col-sm-8", rows="20") }}
             <div class="form-group">

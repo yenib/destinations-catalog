@@ -266,3 +266,32 @@ def logout():
 
     flash("You have been logged out.", "success")
     return redirect(url_for('home'))
+
+
+
+@app.errorhandler(403)
+def accessDeniedError(e):
+    errorCode = 403
+    return render_template("error.html", errorCode=errorCode)
+
+
+
+@app.errorhandler(404)
+def notFoundError(e):
+    errorCode = 404
+    return render_template("error.html", errorCode=errorCode)
+
+
+
+@app.errorhandler(413)
+def requestEntityTooLargeError(e):
+    errorCode = 413
+    return render_template("error.html", errorCode=errorCode)
+
+
+
+@app.errorhandler(500)
+def internalError(e):
+    db.session.rollback()
+    errorCode = 505
+    return render_template("error.html", errorCode=errorCode)
