@@ -27,23 +27,23 @@ class Item(db.Model):
     name = db.Column(db.String(120))
     description = db.Column(db.Text())
     image = db.Column(db.String(255))
-    imageAlt = db.Column(db.String(150))
+    image_alt = db.Column(db.String(150))
     country = db.Column(db.String(80), nullable=False)
     location = db.Column(db.String(150))
-    categoryId = db.Column(db.Integer(),
+    category_id = db.Column(db.Integer(),
                             db.ForeignKey("category.id"),
                             nullable=False)
-    userId = db.Column(db.Integer(),
+    user_id = db.Column(db.Integer(),
                             db.ForeignKey("user.id"),
                             nullable=False)
 
 
-    def __init__(self, name, country, image="", imageAlt="",
+    def __init__(self, name, country, image="", image_alt="",
                  description="", location=""):
         self.name = name
         self.country = country
         self.image = image
-        self.imageAlt = imageAlt
+        self.image_alt = image_alt
         self.description = description
         self.location = location
 
@@ -63,7 +63,7 @@ roles = db.Table(
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
-    lastName = db.Column(db.String(120))
+    last_name = db.Column(db.String(120))
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     picture = db.Column(db.String(255))

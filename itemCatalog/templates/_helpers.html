@@ -28,7 +28,7 @@
                 <div class="col-md-{{12//cols}}">
                     <div class="destination">
                         <a href="{{ url_for('showItem', item_id=item.id) }}">
-                            <img class="img-responsive" src="{{ url_for('downloadFile', filename=item.image) }}" alt="{{ item.imageAlt}}">
+                            <img class="img-responsive" src="{{ url_for('downloadFile', filename=item.image) }}" alt="{{ item.image_alt}}">
                             <p>{{ item.name }}</p>
                         </a>
                     </div>

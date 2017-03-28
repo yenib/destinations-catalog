@@ -79,7 +79,7 @@ def populateDB(dbObject):
                 aliquet arcu aliquam. Nunc ac pharetra mi. In hac habitasse
                 platea dictumst. """)
     item.location = u"San Sebastián"
-    item.categoryId = cat1.id
+    item.category_id = cat1.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -114,7 +114,7 @@ def populateDB(dbObject):
                 Quisque est magna, consequat sit amet semper quis, tempus
                 non metus.""")
     item.location = "Sydney, New South Wales"
-    item.categoryId = cat1.id
+    item.category_id = cat1.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -140,7 +140,7 @@ def populateDB(dbObject):
                 lacus quis, porta aliquet sem. Vestibulum vel vulputate
                 sapien. Nam luctus ex ut pulvinar lobortis.""")
     item.location = "Marietas Islands"
-    item.categoryId = cat1.id
+    item.category_id = cat1.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -175,7 +175,7 @@ def populateDB(dbObject):
                 quis lectus. Quisque est magna, consequat sit amet semper
                 quis, tempus non metus.""")
     item.location = "Ribadeo"
-    item.categoryId = cat1.id
+    item.category_id = cat1.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -203,7 +203,7 @@ def populateDB(dbObject):
                 mattis, lectus eu varius efficitur, leo turpis euismod
                 quam, eu bibendum sapien tellus ut libero.""")
     item.location = "Sanibel Island, Florida"
-    item.categoryId = cat1.id
+    item.category_id = cat1.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -268,7 +268,7 @@ def populateDB(dbObject):
                 quis lectus. Quisque est magna, consequat sit amet semper
                 quis, tempus non metus.""")
     item.location = "Barcelona"
-    item.categoryId = cat3.id
+    item.category_id = cat3.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -294,7 +294,7 @@ def populateDB(dbObject):
                 lacus quis, porta aliquet sem. Vestibulum vel vulputate
                 sapien. Nam luctus ex ut pulvinar lobortis.""")
     item.location = "Athens"
-    item.categoryId = cat3.id
+    item.category_id = cat3.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -362,7 +362,7 @@ def populateDB(dbObject):
                 nulla in, bibendum purus. Nunc ligula velit, consectetur nec
                 lacus quis, porta aliquet sem. Vestibulum vel vulputate
                 sapien. Nam luctus ex ut pulvinar lobortis.""")
-    item.categoryId = cat3.id
+    item.category_id = cat3.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -398,7 +398,7 @@ def populateDB(dbObject):
                 quis lectus. Quisque est magna, consequat sit amet semper
                 quis, tempus non metus.""")
     item.location = "Paris"
-    item.categoryId = cat2.id
+    item.category_id = cat2.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -424,7 +424,7 @@ def populateDB(dbObject):
                 lacus quis, porta aliquet sem. Vestibulum vel vulputate
                 sapien. Nam luctus ex ut pulvinar lobortis.""")
     item.location = "New York"
-    item.categoryId = cat2.id
+    item.category_id = cat2.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -460,7 +460,7 @@ def populateDB(dbObject):
                 Quisque est magna, consequat sit amet semper quis, tempus
                 non metus.""")
     item.location = "New York"
-    item.categoryId = cat2.id
+    item.category_id = cat2.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -486,7 +486,7 @@ def populateDB(dbObject):
                 lacus quis, porta aliquet sem. Vestibulum vel vulputate
                 sapien. Nam luctus ex ut pulvinar lobortis.""")
     item.location = "Cairo"
-    item.categoryId = cat2.id
+    item.category_id = cat2.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -522,7 +522,7 @@ def populateDB(dbObject):
                 Quisque est magna, consequat sit amet semper quis, tempus
                 non metus.""")
     item.location = "London"
-    item.categoryId = cat2.id
+    item.category_id = cat2.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()
@@ -566,7 +566,7 @@ def populateDB(dbObject):
                 aliquet arcu aliquam. Nunc ac pharetra mi. In hac habitasse
                 platea dictumst. """)
     item.location = "Pretoria"
-    item.categoryId = cat6.id
+    item.category_id = cat6.id
     item.user = user2
     dbObject.session.add(item)
     dbObject.session.commit()

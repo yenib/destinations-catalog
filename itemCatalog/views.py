@@ -74,9 +74,9 @@ def newItem():
                     description=form.description.data,
                     location=form.location.data,
                     image=filename,
-                    imageAlt = form.imageAlt.data)
-        item.categoryId=form.category.data
-        item.userId = current_user.id
+                    image_alt = form.image_alt.data)
+        item.category_id=form.category.data
+        item.user_id = current_user.id
 
         db.session.add(item)
         db.session.commit()
@@ -91,7 +91,7 @@ def showItem(item_id):
     item = Item.query.get_or_404(item_id)
 
     canEdit = False
-    permission = Permission(UserNeed(item.userId))
+    permission = Permission(UserNeed(item.user_id))
     if permission.can():
         canEdit = True
     
@@ -109,13 +109,13 @@ def showItem(item_id):
 def editItem(item_id):
     item = Item.query.get_or_404(item_id)
 
-    permission = Permission(UserNeed(item.userId))
+    permission = Permission(UserNeed(item.user_id))
     if permission.can():
         form = ItemForm(CombinedMultiDict((request.files, request.form)), obj=item)
         form.category.choices = getChoicesOfCategorySelect()
         form.image.default = item.image
         if request.method == 'GET':
-            form.category.default = item.categoryId
+            form.category.default = item.category_id
             form.category.process([])
         elif form.validate():
             if isinstance(form.image.data, FileStorage) and form.image.data:
@@ -125,11 +125,11 @@ def editItem(item_id):
                 item.image = filename
             
             item.name = form.name.data
-            item.categoryId = form.category.data
+            item.category_id = form.category.data
             item.coutry = form.country.data
             item.description = form.description.data
             item.location = form.location.data
-            item.imageAlt = form.imageAlt.data
+            item.image_alt = form.image_alt.data
             db.session.add(item)
             db.session.commit()
             flash('The destination was successfully updated.', "success")
@@ -145,7 +145,7 @@ def editItem(item_id):
 def deleteItem(item_id):
     item = Item.query.get_or_404(item_id)
 
-    permission = Permission(UserNeed(item.userId))
+    permission = Permission(UserNeed(item.user_id))
     if permission.can():
         removeFile(item.image)
         db.session.delete(item)
@@ -218,7 +218,7 @@ def deleteCategory(category_id):
 @app.route('/category/<int:category_id>')
 def listItemsByCategory(category_id):
     items = Item.query.options(defer("description")).filter(
-                Item.categoryId == category_id).order_by(Item.id.desc()).all()
+                Item.category_id == category_id).order_by(Item.id.desc()).all()
     categories = Category.query.all()
     return render_template("items.html", items=items, categories=categories)
 

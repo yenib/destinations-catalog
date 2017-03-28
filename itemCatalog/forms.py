@@ -32,7 +32,7 @@ class ItemForm(FlaskForm):
         app.config['UPLOADS_ALLOWED_IMAGES'],
             'Invalid image (valids: %s).' % ", ".join(
                 str(ext) for ext in app.config['UPLOADS_ALLOWED_IMAGES']))])
-    imageAlt = StringField('Picture Alt', [Optional(), Length(max=150)])
+    image_alt = StringField('Picture Alt', [Optional(), Length(max=150)])
 
 
     def validate_category(form, field):
