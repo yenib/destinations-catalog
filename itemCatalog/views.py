@@ -44,18 +44,19 @@ def removeFile(filename):
 
         
 
-@app.route('/picture/<path:filename>')
+@app.route('/picture/<path:filename>/')
 def downloadFile(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 
 @app.route('/')
-@app.route('/destinations')
+@app.route('/destinations/')
 def home():
     items = Item.query.options(defer("description")).order_by(
         Item.id.desc()).all()
-    return render_template("items.html", items=items)
+    categories = Category.query.all()
+    return render_template("items.html", items=items, categories=categories)
 
 
 
@@ -88,16 +89,22 @@ def newItem():
 @app.route('/destination/<int:item_id>/')
 def showItem(item_id):
     item = Item.query.get_or_404(item_id)
+
+    canEdit = False
+    permission = Permission(UserNeed(item.userId))
+    if permission.can():
+        canEdit = True
+    
     relatedItems = Item.query.options(defer("description")).filter(
                         and_(Item.country.ilike(item.country),
                              Item.id != item.id)).order_by(
-                                Item.id.desc()).limit(3).all()
+                                Item.id.desc()).limit(4).all()
     return render_template('showItem.html', item=item,
-                           relatedItems=relatedItems)
+                           relatedItems=relatedItems, canEdit=canEdit)
 
 
 
-@app.route('/destination/<int:item_id>/edit', methods=['GET', 'POST'])
+@app.route('/destination/<int:item_id>/edit/', methods=['GET', 'POST'])
 #@login_required
 def editItem(item_id):
     item = Item.query.get_or_404(item_id)
@@ -133,7 +140,7 @@ def editItem(item_id):
 
 
 
-@app.route('/destination/<int:item_id>/delete', methods=['POST'])
+@app.route('/destination/<int:item_id>/delete/', methods=['POST'])
 #@login_required
 def deleteItem(item_id):
     item = Item.query.get_or_404(item_id)
@@ -147,10 +154,10 @@ def deleteItem(item_id):
         return redirect(url_for('home'))
     else:
         abort(403)
+
     
 
-
-@app.route('/categories')
+@app.route('/categories/')
 #@login_required
 #@admin_permission.require(http_exception=403)
 def listCategories():
@@ -174,7 +181,7 @@ def newCategory():
 
 
 
-@app.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
+@app.route('/category/<int:category_id>/edit/', methods=['GET', 'POST'])
 #@login_required
 #@admin_permission.require(http_exception=403)
 def editCategory(category_id):
@@ -192,7 +199,7 @@ def editCategory(category_id):
 
 
 
-@app.route('/category/<int:category_id>/delete', methods=['POST'])
+@app.route('/category/<int:category_id>/delete/', methods=['POST'])
 #@login_required
 #@admin_permission.require(http_exception=403)
 def deleteCategory(category_id):
@@ -208,7 +215,7 @@ def deleteCategory(category_id):
 
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
     if form.validate_on_submit():
@@ -224,11 +231,13 @@ def login():
 
 
 
-@app.route("/logout")
+@app.route("/logout/")
 @login_required
 def logout():
     logout_user()
+
     identity_changed.send(current_app._get_current_object(),
                           identity=AnonymousIdentity())
+
     flash("You have been logged out.", "success")
     return redirect(url_for('home'))

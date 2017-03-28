@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 
-from flask_login.mixins import AnonymousUserMixin
+from flask_login.mixins import UserMixin
 
 
 db = SQLAlchemy()
@@ -60,10 +60,10 @@ roles = db.Table(
 
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
-    last_name = db.Column(db.String(120))
+    lastName = db.Column(db.String(120))
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     picture = db.Column(db.String(255))
@@ -80,30 +80,15 @@ class User(db.Model):
         return '<User %r>' % self.email
 
 
-    #Flask-Login required implementations
-    def is_authenticated(self):
-        if isinstance(self, AnonymousUserMixin):
-            return False
-        else:
-            return True
-
-        
+    #required by Flask-Login
     def is_active(self):
         #self.active
         return True
 
 
-    def is_anonymous(self):
-        if isinstance(self, AnonymousUserMixin):
-            return True
-        else:
-            return False
-
-
-    def get_id(self):
-        return unicode(self.id)
-    #/Flask-Login required implementations
-
+    def isAdmin():
+        return 'admin' in roles
+        
 
 
 
