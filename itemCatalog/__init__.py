@@ -6,7 +6,7 @@ from flask_login.utils import current_user
 
 from itemCatalog.config import config
 from itemCatalog.models import db
-from itemCatalog.extensions import login_manager, principals
+from itemCatalog.extensions import login_manager, principals, rest_api
 
 
 app = Flask(__name__)
@@ -18,6 +18,8 @@ app.config.from_object(config[config_name])
 db.init_app(app)
 login_manager.init_app(app)
 principals.init_app(app)
+
+rest_api.init_app(app)
 
 
 @identity_loaded.connect_via(app)
