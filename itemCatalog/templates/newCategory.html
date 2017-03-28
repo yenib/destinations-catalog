@@ -4,16 +4,20 @@
 {% block page_title %}New Category{% endblock %}
 
 {% block content %}
-<h1>Create a New Category</h1>
-<form class="form-horizontal" method="POST" action="{{ url_for('.newCategory') }}">
-    {{ form.csrf_token }}
-    {{ render_field(form.name, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
-    {{ render_field(form.description, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-success">Create</button>
-          <a class="btn btn-default" href="{{ url_for('.listCategories') }}">Cancel</a>
-        </div>
+<div class="row">
+    <div class="col-md-12">
+        <h1>Create a New Category</h1>
+        <form class="form-horizontal" method="POST" action="{{ url_for('newCategory') }}">
+            {{ form.csrf_token }}
+            {{ render_field(form.name, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+            {{ render_field(form.description, labelClass="col-sm-2", wrapElemClass="col-sm-8", rows="5") }}
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-success">Create</button>
+                  <a class="btn btn-default" href="{{ url_for('listCategories') }}">Cancel</a>
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+</div>
 {% endblock %}

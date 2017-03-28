@@ -4,21 +4,25 @@
 {% block page_title %}New Destination{% endblock %}
 
 {% block content %}
-<h1>Create New Destination</h1>
-<form enctype="multipart/form-data" class="form-horizontal" method="POST" action="{{ url_for('.newItem') }}">
-    {{ form.csrf_token }}
-    {{ render_field(form.name, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
-    {{ render_field(form.country, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
-    {{ render_field(form.location, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
-    {{ render_field(form.category, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
-    {{ render_field(form.image, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
-    {{ render_field(form.imageAlt, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
-    {{ render_field(form.description, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-success">Create</button>
-          <a class="btn btn-default" href="{{ url_for('.home') }}">Cancel</a>
-        </div>
+<div class="row">
+    <div class="col-md-12">
+        <h1>Create New Destination</h1>
+        <form enctype="multipart/form-data" class="form-horizontal" method="POST" action="{{ url_for('newItem') }}">
+            {{ form.csrf_token }}
+            {{ render_field(form.name, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+            {{ render_field(form.country, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+            {{ render_field(form.location, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+            {{ render_field(form.category, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+            {{ render_field(form.image, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+            {{ render_field(form.imageAlt, labelClass="col-sm-2", wrapElemClass="col-sm-8") }}
+            {{ render_field(form.description, labelClass="col-sm-2", wrapElemClass="col-sm-8", rows="20") }}
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-success">Create</button>
+                  <a class="btn btn-default" href="{{ url_for('home') }}">Cancel</a>
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+</div>
 {% endblock %}

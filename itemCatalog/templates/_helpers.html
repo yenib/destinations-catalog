@@ -4,9 +4,14 @@
         {% set label_class = 'control-label ' + kwargs.pop('labelClass', '') %}
         {{ field.label(class=label_class) }}
 
+        {% set help_msg = kwargs.pop('helpMsg', '') %}
+
         <div class="{{ kwargs.pop('wrapElemClass', '') }}">
             {% set form_class = 'form-control ' + kwargs.pop('class', '') %}
             {{ field(class=form_class, **kwargs) }}
+            {% if help_msg%}
+                <p class="help-block">{{ help_msg}}</p>
+            {% endif %}
         </div>
         {% if field.errors %}
             {% for error in field.errors %}<span class="help-block">{{ error }}</span>{% endfor %}
@@ -20,12 +25,13 @@
     {% for row in items|batch(cols) %}
         <div class="row">
             {% for item in row %}
-                <div class="col-md-{{12//cols}} destination">
-                    <a href="{{ url_for('.showItem', item_id=item.id) }}">
-                        <p>{{ item.name }}</p>
-                        <img class="img-responsive" src="{{ url_for('.downloadFile', filename=item.image) }}" alt="{{ item.imageAlt}}">
-                    </a>
-                    <p>{{ item.country }}</p>
+                <div class="col-md-{{12//cols}}">
+                    <div class="destination">
+                        <a href="{{ url_for('showItem', item_id=item.id) }}">
+                            <img class="img-responsive" src="{{ url_for('downloadFile', filename=item.image) }}" alt="{{ item.imageAlt}}">
+                            <p>{{ item.name }}</p>
+                        </a>
+                    </div>
                 </div>
             {% endfor %}
         </div>

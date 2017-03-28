@@ -3,32 +3,64 @@
 {% block page_title %}List of Categories{% endblock %}
 
 {% block content %}
-    <h1>Categories</h1>
-    <a class="btn btn-success" href="{{ url_for('.newCategory') }}">Add Category</a>
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cat in categories %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Categories</h1>
+        <a class="btn btn-success" href="{{ url_for('newCategory') }}">Add Category</a>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
                     <tr>
-                        <td>{{ cat.name }}</td>
-                        <td>{{ cat.description }}</td>
-                        <td><a href="{{ url_for('.editCategory', category_id=cat.id) }}">Edit</a></td>
-                        <td>
-                            <form method="POST" action="{{ url_for('.deleteCategory', category_id=cat.id) }}">
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                        </td>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th></th>
+                        <th></th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for cat in categories %}
+                        <tr>
+                            <td>{{ cat.name }}</td>
+                            <td>{{ cat.description }}</td>
+                            <td>
+                                <a href="{{ url_for('editCategory', category_id=cat.id) }}" class="btn btn-success"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            </td>
+                            <td>
+                                <form id="del-cat-frm" method="POST" action="{{ url_for('deleteCategory', category_id=cat.id) }}">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm-modal"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="confirm-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Confirmation Dialog</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this category?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="modal-ok-btn">Continue</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endblock %}
+
+{% block js %}
+<script>
+    $("#modal-ok-btn").click(function(){
+        $("#del-cat-frm").submit()
+    });
+</script>
 {% endblock %}

@@ -4,6 +4,22 @@
 {% block page_title %}List of Destinations{% endblock %}
 
 {% block content %}
-    <h1>Destinations</h1>
-    {{ render_items(items) }}
+<div class="row">
+    <div class="col-md-3">
+        <div class="categories">
+            <h3>Categories</h3>
+            <ul class="list-group">
+            {% for cat in categories %}
+                <li class="list-group-item">
+                    <a href="#" class="sliding-u-l-r">{{ cat.name }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <h1>Latest destinations No search results.</h1>
+        {{ render_items(items) }}
+    </div>
+</div>
 {% endblock %}
