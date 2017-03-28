@@ -215,6 +215,15 @@ def deleteCategory(category_id):
 
 
 
+@app.route('/category/<int:category_id>')
+def listItemsByCategory(category_id):
+    items = Item.query.options(defer("description")).filter(
+                Item.categoryId == category_id).order_by(Item.id.desc()).all()
+    categories = Category.query.all()
+    return render_template("items.html", items=items, categories=categories)
+
+
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)

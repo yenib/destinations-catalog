@@ -11,7 +11,7 @@
             <ul class="list-group">
             {% for cat in categories %}
                 <li class="list-group-item">
-                    <a href="#" class="sliding-u-l-r">{{ cat.name }}</a>
+                    <a href="{{ url_for('listItemsByCategory', category_id=cat.id) }}" class="sliding-u-l-r">{{ cat.name }}</a>
                 </li>
             {% endfor %}
             </ul>
