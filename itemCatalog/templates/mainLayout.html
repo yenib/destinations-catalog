@@ -34,7 +34,42 @@
             }
         </script>
     {% endif %}
+    {% if session.get('fb_credentials') %}
+        <script type="text/javascript">
+            // Initialize the Facebook SDK for JavaScript
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId      : '1055639074569509',
+                    cookie     : true,  // enable cookies to allow the server to access
+                    xfbml      : true,  // parse social plugins on this page
+                    version    : 'v2.9' // use graph api version 2.9
+                });
 
+                $( "#logout-lnk" ).click(function(e) {
+                    e.preventDefault();
+                    FB.getLoginStatus(function(response) {
+                        if (response.status === 'connected') {
+                            FB.logout(function(response) {
+                                $(location).attr('href', $( "#logout-lnk" ).attr("href"));
+                            });
+                        } else {
+                            $(location).attr('href', $( "#logout-lnk" ).attr("href"));
+                        }
+
+                    });
+                });
+            };
+
+            // Load the Facebook SDK for JavaScript
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        </script>
+    {% endif %}
 
     {% block immediate_js %}
     {% endblock %}

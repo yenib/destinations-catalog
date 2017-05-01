@@ -16,6 +16,26 @@
             });
         }
     </script>
+
+    <script type="text/javascript">
+        // Load and initialize the Facebook SDK for JavaScript
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '1055639074569509',
+                cookie     : true,  // enable cookies to allow the server to access
+                xfbml      : true,  // parse social plugins on this page
+                version    : 'v2.9' // use graph api version 2.9
+            });
+        };
+
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
 {% endblock %}
 
 
@@ -35,6 +55,18 @@
                         auth2.grantOfflineAccess().then(gSignInCallback);
                     });
                 </script>
+
+                <div
+                    class="fb-login-button"
+                    data-max-rows="1"
+                    data-size="large"
+                    data-button-type="login_with"
+                    data-show-faces="false"
+                    data-auto-logout-link="false"
+                    data-use-continue-as="false"
+                    data-scope="email"
+                    onlogin="fSignInCallback"
+                ></div>
             </div>
         </div>
 
@@ -101,5 +133,41 @@
                 $("#result").html(getAlert('danger', 'Unable to authenticate with google'));
             }
         }
+
+        // Callback function for the Facebook sign-in button
+        var fSignInCallback = function() {
+            var accessToken = FB.getAuthResponse()['accessToken'];
+            $('#gsignin-btn').attr('style', 'display: none');
+            $('.fb-login-button').attr('style', 'display: none');
+            $('#app-signin-btn').attr('style', 'display: none');
+            // TODO: Add spinning icon while waiting for server's response
+
+            // Send the access token to the server
+            $.ajax({
+                type: 'POST',
+                url: '/fbconnect?state={{session["state"]}}',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function(result) {
+                    $('#result').html('<h1>Welcome ' + (result['userName'] ? result['userName'] : '') + '!</h1>');
+                    if(result['userPicture']) {
+                        $('#result').append('<div id="profile-pict" style="background-image: url(' +
+                            result['userPicture']  + '"></div>');
+                    }
+                    $('#result').append('<p>Redirecting...<p>');
+
+                    setTimeout(function() {
+                        window.location.href = "{{ url_for('home') }}";
+                    }, 4000);
+                },
+                error: function(xhr){
+                    $("#result").html(getAlert('danger', xhr.responseText));
+                },
+                processData: false,
+                data: accessToken
+            });
+        };
     </script>
 {% endblock %}

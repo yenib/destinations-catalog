@@ -15,6 +15,7 @@ class Config(object):
     WTF_CSRF_SECRET_KEY = 'w\x0b!\x0f\x07X\x8e\x9a3[\xf2;\xd4Q\xafMb\xce\xa0\xbd\x9a<)\x9d'
 
     GOOGLE_CLIENT_SECRET_FILE = APP_ROOT + '/../../client_secret.json'
+    FACEBOOK_CLIENT_SECRET_FILE = APP_ROOT + '/../../fb_client_secret.json'
 
 
 class DevConfig(Config):

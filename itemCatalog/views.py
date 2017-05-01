@@ -273,7 +273,6 @@ def login():
 @app.route("/logout/")
 @login_required
 def logout():
-
     # Delete credentials if user is authenticated with Google
     if session.get('credentials'):
         # Revoke access if the credentials have not expired
@@ -287,6 +286,10 @@ def logout():
         #        return redirect(url_for('home'))
         del session['credentials']
 
+    # Delete credentials if user is authenticated with Facebook
+    if session.get('fb_credentials'):
+        del session['fb_credentials']
+    
     logout_user()
     identity_changed.send(current_app._get_current_object(),
                           identity=AnonymousIdentity())
