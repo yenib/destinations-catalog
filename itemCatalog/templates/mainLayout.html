@@ -10,9 +10,34 @@
     <title>{% block page_title %}{% endblock %} - Destinations Catalog</title>
 
     <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Quattrocento" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Quattrocento|Roboto" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="{{url_for('static', filename='css/styles.css')}}" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    {% if session.get('credentials') %}
+        <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+        <script type="text/javascript">
+            // Initialize the GoogleAuth object
+            function start() {
+                gapi.load('auth2', function() {
+                    auth2 = gapi.auth2.init({
+                        client_id: '513824734604-pki9p8vqj35cl7ui70gnlubc5b0t7igm.apps.googleusercontent.com'
+                    });
+                });
+
+                $("#logout-lnk").click(function(e) {
+                    e.preventDefault();
+                    gapi.auth.signOut();
+                    $(location).attr('href', $( "#logout-lnk" ).attr("href"));
+                });
+            }
+        </script>
+    {% endif %}
+
+
+    {% block immediate_js %}
+    {% endblock %}
 </head>
 
 <body>
@@ -24,7 +49,7 @@
                     <div class="container">
                         <p class="logged-user">
                             {% if current_user.is_authenticated %}
-                                Welcome current_user.email | <a href="{{ url_for('logout') }}">Logout</a>
+                                Welcome {{ current_user.email }} | <a id="logout-lnk" href="{{ url_for('logout') }}">Logout</a>
                             {% endif %}
                         </p>
                         <div class="navbar-header">
@@ -36,7 +61,8 @@
                         <ul class="nav navbar-nav navbar-right">
                             {% if not current_user.is_authenticated %}
                                 <li><a href="{{ url_for('newItem') }}">Add destination</a></li>
-                            {% elif current_user.isAdmin %}
+                                <li><a href="{{ url_for('login') }}">Login</a></li>
+                            {% elif current_user.isAdmin() %}
                                 <li><a href="{{ url_for('listCategories') }}">Categories</a></li>
                             {% else %}
                                 <li><a href="{{ url_for('newItem') }}">Add destination</a></li>
@@ -59,7 +85,7 @@
     </header>
 
     <div class="container">
-        <dir class="row">
+        <div class="row">
             <div class="col-md-12">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
@@ -72,11 +98,12 @@
                     {% endif %}
                 {% endwith %}
             </div>
-        </dir>
+        </div>
 
         {% block content %}
         {% endblock %}
     </div><!-- /.container -->
+
     <footer class="footer">
         <div class="container">
             <div class="row">
@@ -87,10 +114,8 @@
         </div>
     </footer>
 
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
-    </script>
     <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+
     {% block js %}
     {% endblock %}
 </body>

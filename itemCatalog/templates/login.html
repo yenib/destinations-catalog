@@ -3,15 +3,103 @@
 
 {% block page_title %}Login{% endblock %}
 
+
+{% block immediate_js %}
+    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+    <script type="text/javascript">
+        // Initialize the GoogleAuth object
+        function start() {
+            gapi.load('auth2', function() {
+                auth2 = gapi.auth2.init({
+                    client_id: '513824734604-pki9p8vqj35cl7ui70gnlubc5b0t7igm.apps.googleusercontent.com'
+                });
+            });
+        }
+    </script>
+{% endblock %}
+
+
 {% block content %}
-<form class="form-horizontal" method="POST" action="{{ url_for('.login') }}">
-    {{ form.csrf_token }}
-    {{ render_field(form.email, labelClass="col-sm-2", wrapElemClass="col-sm-5") }}
-    {{ render_field(form.password, labelClass="col-sm-2", wrapElemClass="col-sm-5") }}
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-5">
-          <button type="submit" class="btn btn-success">Login</button>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="result"></div>
         </div>
     </div>
-</form>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="auth-providers pull-right">
+                <a id="gsignin-btn" class="signin-btn"><span>Sign in with Google</span></a>
+                <script>
+                    $('#gsignin-btn').click(function() {
+                        auth2.grantOfflineAccess().then(gSignInCallback);
+                    });
+                </script>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <form id="app-signin-btn" class="form-horizontal" method="POST" action="{{ url_for('login') }}">
+                {{ form.csrf_token }}
+                {{ render_field(form.email, labelClass="sr-only", wrapElemClass="col-sm-6", placeholder="Email") }}
+                {{ render_field(form.password, labelClass="sr-only", wrapElemClass="col-sm-6", placeholder="Password") }}
+                <div class="form-group">
+                    <div class="col-sm-6">
+                      <button type="submit" class="btn btn-success">Login</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        function getAlert(category, msg) {
+            var alert = '<div class="alert alert-' + category + ' alert-dismissible fade in" role="alert">' +
+                        '<button type="button" class="close" aria-label="Close" data-dismiss="alert">' +
+                        '<span aria-hidden="true">×</span></button>' + msg + '</div>';
+            return alert;
+        }
+
+        // Callback function for the Google sign-in button
+        var gSignInCallback = function(authResult) {
+            if (authResult['code']) {
+                $('#gsignin-btn').attr('style', 'display: none');
+                $('.fb-login-button').attr('style', 'display: none');
+                $('#app-signin-btn').attr('style', 'display: none');
+                // TODO: Add spinning icon while waiting for server's response
+
+                // Send the one-time code to the server
+                $.ajax({
+                    type: 'POST',
+                    url: '/gconnect?state={{session["state"]}}',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    contentType: 'application/octet-stream; charset=utf-8',
+                    success: function(result) {
+                        $('#result').html('<h1>Welcome ' + (result['userName'] ? result['userName'] : '') + '!</h1>');
+                        if(result['userPicture']) {
+                            $('#result').append('<div id="profile-pict" style="background-image: url(' +
+                                result['userPicture']  + '"></div>');
+                        }
+                        $('#result').append('<p>Redirecting...<p>');
+
+                        setTimeout(function() {
+                            window.location.href = "{{ url_for('home') }}";
+                        }, 4000);
+                    },
+                    error: function(xhr){
+                        $("#result").html(getAlert('danger', xhr.responseText));
+                    },
+                    processData: false,
+                    data: authResult['code']
+                });
+            } else {
+                // There was an error.
+                $("#result").html(getAlert('danger', 'Unable to authenticate with google'));
+            }
+        }
+    </script>
 {% endblock %}

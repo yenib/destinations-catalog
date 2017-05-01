@@ -1,24 +1,28 @@
 import os
+#import httplib2
 
 from itemCatalog import app, db
 from itemCatalog.forms import CategoryForm, ItemForm, LoginForm
 from itemCatalog.models import Category, Item, User
 from itemCatalog.extensions import admin_permission
+from itemCatalog.utils import getAntiForgeryToken, createOrSignInUser
 
-from flask import (flash, render_template, request, abort,
+from flask import (flash, render_template, request, abort, session,
                    redirect, url_for, send_from_directory, current_app)
 
-from flask_login.utils import (login_required, login_user,
-                               logout_user, current_user)
-from flask_principal import (identity_changed, AnonymousIdentity, Identity,
+from flask_login.utils import (login_required, logout_user, current_user)
+from flask_principal import (identity_changed, AnonymousIdentity,
                              Permission, UserNeed)
-
 
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import CombinedMultiDict, FileStorage
 
 from sqlalchemy.orm import defer
 from sqlalchemy.sql.expression import and_, or_
+
+#from oauth2client.client import OAuth2Credentials, TokenRevokeError
+
+
 
 
 def getChoicesOfCategorySelect():
@@ -242,12 +246,22 @@ def searchItems():
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
     form = LoginForm(request.form)
+
+    # Create anti-forgery state token for OAuth providers
+    if not session.get('state'):
+        session['state'] = getAntiForgeryToken()
+        
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).one()
-        login_user(user)
-        identity_changed.send(current_app._get_current_object(),
-                              identity=Identity(user.id))
+        createOrSignInUser(email=form.email.data)
+
+        if session.get('state'):
+            # This is a POST request for local authentication, state won't
+            # be needed anymore
+            del session['state']
 
         flash('Logged in successfully.', 'success')
 
@@ -259,8 +273,21 @@ def login():
 @app.route("/logout/")
 @login_required
 def logout():
-    logout_user()
 
+    # Delete credentials if user is authenticated with Google
+    if session.get('credentials'):
+        # Revoke access if the credentials have not expired
+        #credentials = OAuth2Credentials.from_json(session['credentials'])
+        #if not credentials.access_token_expired:
+        #    try:
+        #        credentials.revoke(httplib2.Http())
+        #    except TokenRevokeError as e:
+        #        print(repr(e))
+        #        flash("Could not log out of google.", "danger")
+        #        return redirect(url_for('home'))
+        del session['credentials']
+
+    logout_user()
     identity_changed.send(current_app._get_current_object(),
                           identity=AnonymousIdentity())
 

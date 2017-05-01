@@ -49,3 +49,4 @@ def on_identity_loaded(sender, identity):
 
 
 import itemCatalog.views
+import itemCatalog.main

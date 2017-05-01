@@ -86,8 +86,8 @@ class User(db.Model, UserMixin):
         return True
 
 
-    def isAdmin():
-        return 'admin' in roles
+    def isAdmin(self):
+        return 'admin' in self.roles
         
 
 

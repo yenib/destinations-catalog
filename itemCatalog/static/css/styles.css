@@ -121,6 +121,7 @@ header {
     height: 18px;
 }
 
+
 /* Home page */
 
 .categories h3 {
@@ -167,7 +168,10 @@ header {
     height: 176px;
 }
 
+
+
 /* Login */
+
 .auth-providers a {
     margin-right: 3.5em;
 }
@@ -175,6 +179,63 @@ header {
 .auth-providers a:hover {
     cursor: pointer;
 }
+
+.signin-btn {
+    box-sizing: border-box;
+    display: block;
+    width: 236px;
+    height: 40px;
+    border: none;
+    text-align: left;
+    line-height: 40px;
+    white-space: nowrap;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    font-size: 15px;
+}
+
+.signin-btn:focus {
+    outline: none;
+}
+
+#gsignin-btn {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: #fff;
+    background: url('../img/btn_google_dark_normal_ios.svg');
+    background-color: #4285f4;
+    background-repeat: no-repeat;
+    background-origin: border-box;
+    background-position: -3px -3px;
+    margin-bottom: 15px;
+}
+
+#gsignin-btn:hover,
+#gsignin-btn:focus {
+    text-decoration: none;
+    color: #fff;
+}
+
+#gsignin-btn span {
+    padding-left: 54px;
+}
+
+#result > h1, #result > p {
+    text-align: center;
+}
+
+#result  #profile-pict {
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+
 
 /* Destination's page */
 
