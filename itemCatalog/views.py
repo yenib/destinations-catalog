@@ -50,7 +50,7 @@ def home():
 
 
 @app.route('/destination/new/', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def newItem():
     form = ItemForm(CombinedMultiDict((request.files, request.form)))    
     form.category.choices = getChoicesOfCategorySelect()
@@ -97,7 +97,7 @@ def showItem(item_id):
 
 
 @app.route('/destination/<int:item_id>/edit/', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def editItem(item_id):
     item = Item.query.get_or_404(item_id)
 
@@ -139,7 +139,7 @@ def editItem(item_id):
 
 
 @app.route('/destination/<int:item_id>/delete/', methods=['POST'])
-#@login_required
+@login_required
 def deleteItem(item_id):
     item = Item.query.get_or_404(item_id)
 
@@ -158,8 +158,8 @@ def deleteItem(item_id):
     
 
 @app.route('/categories/')
-#@login_required
-#@admin_permission.require(http_exception=403)
+@login_required
+@admin_permission.require(http_exception=403)
 def listCategories():
     cats = Category.query.all()
     return render_template('categories.html', categories=cats)
@@ -167,8 +167,8 @@ def listCategories():
 
 
 @app.route('/category/new/', methods=['GET', 'POST'])
-#@login_required
-#@admin_permission.require(http_exception=403)
+@login_required
+@admin_permission.require(http_exception=403)
 def newCategory():
     form = CategoryForm(request.form)
     if form.validate_on_submit():
@@ -182,8 +182,8 @@ def newCategory():
 
 
 @app.route('/category/<int:category_id>/edit/', methods=['GET', 'POST'])
-#@login_required
-#@admin_permission.require(http_exception=403)
+@login_required
+@admin_permission.require(http_exception=403)
 def editCategory(category_id):
     cat = Category.query.get_or_404(category_id)
     form = CategoryForm(request.form, obj=cat)
@@ -200,8 +200,8 @@ def editCategory(category_id):
 
 
 @app.route('/category/<int:category_id>/delete/', methods=['POST'])
-#@login_required
-#@admin_permission.require(http_exception=403)
+@login_required
+@admin_permission.require(http_exception=403)
 def deleteCategory(category_id):
     cat = Category.query.get_or_404(category_id)
     if cat.items.first():
