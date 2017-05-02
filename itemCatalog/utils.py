@@ -1,4 +1,4 @@
-from itemCatalog import db
+from itemCatalog import app, db
 from itemCatalog.models import User
 
 from flask import current_app
@@ -7,6 +7,9 @@ from flask_principal import identity_changed, Identity
 
 import hashlib
 import os
+
+from werkzeug.utils import secure_filename
+
 
 
 def getAntiForgeryToken():
@@ -36,3 +39,20 @@ def createOrSignInUser(email, password="", name="", lastName="",
                           identity=Identity(user.id))
     
     return user
+
+
+
+def saveFile(file, filename):
+    if file:
+        if not filename:
+            filename = secure_filename(file.filename)
+        #TODO: resolve name's conflicts    
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+
+
+def removeFile(filename):
+    file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if os.path.isfile(file):
+        os.remove(file)
+

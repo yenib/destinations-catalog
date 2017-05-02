@@ -9,6 +9,11 @@ from itemCatalog.models import db
 from itemCatalog.extensions import login_manager, principals, rest_api
 
 
+# What does this file do?
+#  - creates and configures the application
+#  - initializes the extensions the app uses
+
+
 app = Flask(__name__)
 
 config_name = os.getenv('ITEMCATALOG_CONFIG', 'development')
@@ -24,9 +29,7 @@ rest_api.init_app(app)
 
 @identity_loaded.connect_via(app)
 def on_identity_loaded(sender, identity):
-    # Not needed - Add user object to the identity
-    #identity.user = current_user
-
+    
     # Add the UserNeed to the identity
     if getattr(current_user, 'id', None):
         identity.provides.add(UserNeed(current_user.id))
@@ -47,6 +50,6 @@ def on_identity_loaded(sender, identity):
 
 
 
-
+# Import the application's routes
 import itemCatalog.views
 import itemCatalog.main

@@ -4,10 +4,15 @@ from itemCatalog.models import Category, Item
 from itemCatalog.rest.fields import categoryFields, itemFields
 
 
+# What does this file do?
+#  - defines the API endpoints of the Application
+
 
 
 
 class CategoryAPI(Resource):
+
+    # endpoint to query all categories or a specific category
     @marshal_with(categoryFields)
     def get(self, category_id=None):
         if category_id:
@@ -18,6 +23,8 @@ class CategoryAPI(Resource):
 
 
 class ItemAPI(Resource):
+
+    # endpoint to query all destinations or a specific destination
     @marshal_with(itemFields)
     def get(self, item_id=None):
         if item_id:

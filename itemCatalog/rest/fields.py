@@ -3,6 +3,11 @@ from flask_restful import fields
 from flask import url_for
 
 
+# What does this file do?
+#  - defines for each model entity used what data will be provided through
+#    the Application's API endpoints
+
+
 category_nested_items_fields = {
     'id': fields.Integer,
     'name': fields.String

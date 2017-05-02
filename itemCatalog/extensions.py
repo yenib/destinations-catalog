@@ -6,6 +6,10 @@ from itemCatalog.models import User
 from itemCatalog.rest.api import CategoryAPI, ItemAPI
 
 
+# What does this file do?
+#  - creates and configures the extensions the app uses
+
+
 principals = Principal()
 admin_permission = Permission(RoleNeed('admin'))
 default_user_permission = Permission(RoleNeed('user'))
@@ -14,7 +18,7 @@ default_user_permission = Permission(RoleNeed('user'))
 
 login_manager = LoginManager()
 login_manager.login_view = "login"
-login_manager.login_message = "Please login to access this page"
+login_manager.login_message = "Please, login to access this page"
 login_manager.login_message_category = "info"
 login_manager.session_protection = "strong"
 

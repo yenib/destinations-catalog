@@ -1,5 +1,11 @@
 import os
 
+
+# What does this file do?
+#  - defines global application settings for different environments
+
+
+
 class Config(object):
     DEBUG = False
     TESTING = False

@@ -1,11 +1,11 @@
-import os
 #import httplib2
 
 from itemCatalog import app, db
 from itemCatalog.forms import CategoryForm, ItemForm, LoginForm
 from itemCatalog.models import Category, Item, User
 from itemCatalog.extensions import admin_permission
-from itemCatalog.utils import getAntiForgeryToken, createOrSignInUser
+from itemCatalog.utils import (getAntiForgeryToken, createOrSignInUser,
+                               saveFile, removeFile)
 
 from flask import (flash, render_template, request, abort, session,
                    redirect, url_for, send_from_directory, current_app)
@@ -30,21 +30,6 @@ def getChoicesOfCategorySelect():
     cats = Category.query.options(defer("description")).all()
     choices.extend([(c.id, c.name) for c in cats])
     return choices
-
-
-
-def saveFile(file, filename):
-    if file:
-        if not filename:
-            filename = secure_filename(file.filename)
-        #TODO: resolve name's conflicts    
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-
-def removeFile(filename):
-    file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    if os.path.isfile(file):
-        os.remove(file)
 
         
 
@@ -95,10 +80,13 @@ def showItem(item_id):
     item = Item.query.get_or_404(item_id)
 
     canEdit = False
+    # Check if the logged user is the one that created the destination about to
+    # display.
     permission = Permission(UserNeed(item.user_id))
     if permission.can():
         canEdit = True
-    
+
+    # Get destinations from the same country.
     relatedItems = Item.query.options(defer("description")).filter(
                         and_(Item.country.ilike(item.country),
                              Item.id != item.id)).order_by(
@@ -113,15 +101,21 @@ def showItem(item_id):
 def editItem(item_id):
     item = Item.query.get_or_404(item_id)
 
+    # Check if the logged user is the one that created the destination about to
+    # edit.
     permission = Permission(UserNeed(item.user_id))
     if permission.can():
-        form = ItemForm(CombinedMultiDict((request.files, request.form)), obj=item)
+        # Create the form object using data from different sources.
+        form = ItemForm(CombinedMultiDict((request.files, request.form)),
+                        obj=item)
         form.category.choices = getChoicesOfCategorySelect()
         form.image.default = item.image
         if request.method == 'GET':
             form.category.default = item.category_id
+            # Makes effective the default selection set above.
             form.category.process([])
         elif form.validate():
+            # Manages images updates. 
             if isinstance(form.image.data, FileStorage) and form.image.data:
                 filename = secure_filename(form.image.data.filename)
                 removeFile(item.image)
@@ -149,6 +143,8 @@ def editItem(item_id):
 def deleteItem(item_id):
     item = Item.query.get_or_404(item_id)
 
+    # Check if the logged user is the one that created the destination about to
+    # delete.
     permission = Permission(UserNeed(item.user_id))
     if permission.can():
         removeFile(item.image)
@@ -230,13 +226,14 @@ def listItemsByCategory(category_id):
 
 @app.route('/category')
 def searchItems():
-    search_term = request.args.get('search', '')
+    searchTerm = request.args.get('search', '')
 
     items = []
-    if search_term:
+    if searchTerm:
+        # Search by country and name.
         items = Item.query.options(defer("description")).filter(    
-                    or_(Item.country.ilike("%" + search_term + "%"),
-                        Item.name.ilike("%" + search_term + "%"))).order_by(
+                    or_(Item.country.ilike("%" + searchTerm + "%"),
+                        Item.name.ilike("%" + searchTerm + "%"))).order_by(
                             Item.id.desc()).all()
 
     categories = Category.query.all()
