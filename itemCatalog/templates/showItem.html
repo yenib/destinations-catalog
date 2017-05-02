@@ -16,9 +16,13 @@
         </div>
         <div class="col-md-4">
             <div class="item-meta">
-            <p>{{ item.country }}</p>
-            <p>{% if item.location %}<i class="fa fa-map-marker" aria-hidden="true"></i> {{ item.location }}{% endif %}</p>
-            <p><span class="label label-primary">{{ item.category.name }}</span></p>
+                <p>{{ item.country }}</p>
+                <p>{% if item.location %}<i class="fa fa-map-marker" aria-hidden="true"></i> {{ item.location }}{% endif %}</p>
+                <p>
+                    <span class="label label-primary">
+                        <a href="{{ url_for('listItemsByCategory', category_id=item.category.id) }}">{{ item.category.name }}</a>
+                    </span>
+                </p>
             </div>
         </div>
     </div>

@@ -253,6 +253,17 @@ header {
     font-size: 12px;
 }
 
+.item-meta .label a {
+    color: #fff;
+
+}
+
+.item-meta .label a,
+.item-meta .label a {
+    text-decoration: none;
+    color: #fff;
+}
+
 .item-actions form {
     display: inline-block;
     margin: 10px 20px;
