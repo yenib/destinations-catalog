@@ -16,7 +16,7 @@ from itemCatalog.extensions import login_manager, principals, rest_api
 
 app = Flask(__name__)
 
-config_name = os.getenv('ITEMCATALOG_CONFIG', 'development')
+config_name = os.getenv('ITEMCATALOG_CONFIG', 'production')
 app.config.from_object(config[config_name])
 
 
