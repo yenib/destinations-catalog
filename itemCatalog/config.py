@@ -34,7 +34,7 @@ class ProdConfig(Config):
     SECRET_KEY = '\x1f\x99\x1c\x14v\x0f\xebyZnT\x98\xef\x8e\x83x\x90b\xd5\xea\x93\xfc\x04\xf1'
     # Sets URI for production DB. Heroku creates the DATABASE_URL environment
     # variable when the Postgres addon is added to our Heroku app.
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']    
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')    
     SQLALCHEMY_TRACK_MODIFICATIONS=False
     
 
