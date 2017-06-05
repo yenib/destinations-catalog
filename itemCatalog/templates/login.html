@@ -120,7 +120,7 @@
 
                         setTimeout(function() {
                             window.location.href = "{{ url_for('home') }}";
-                        }, 4000);
+                        }, 3000);
                     },
                     error: function(xhr){
                         $("#result").html(getAlert('danger', xhr.responseText));
@@ -160,7 +160,7 @@
 
                     setTimeout(function() {
                         window.location.href = "{{ url_for('home') }}";
-                    }, 4000);
+                    }, 3000);
                 },
                 error: function(xhr){
                     $("#result").html(getAlert('danger', xhr.responseText));

@@ -6,8 +6,7 @@ from flask import make_response, session, request, jsonify
 import httplib2
 import json
 from googleapiclient.discovery import build
-from oauth2client.client import (credentials_from_clientsecrets_and_code,
-                                FlowExchangeError)
+from oauth2client.client import (credentials_from_code, FlowExchangeError)
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -23,8 +22,12 @@ def gconnect():
     
     try:        
         # Exchange auth code for access token, refresh token, and ID token
-        credentials = credentials_from_clientsecrets_and_code(
-            filename = app.config['GOOGLE_CLIENT_SECRET_FILE'],
+        appInfo = json.loads(app.config['GOOGLE_CLIENT_SECRET'])
+        credentials = credentials_from_code(
+            client_id = appInfo['web']['client_id'],
+            client_secret = appInfo['web']['client_secret'],
+            auth_uri = appInfo['web']['auth_uri'],
+            token_uri = appInfo['web']['token_uri'],
             scope = ['profile', 'email'],
             code = authCode)
         
@@ -67,8 +70,7 @@ def fbconnect():
 
     accessToken = request.data
 
-    appInfo = json.loads(open(app.config['FACEBOOK_CLIENT_SECRET_FILE'],
-                             'r').read())
+    appInfo = json.loads(app.config['FACEBOOK_CLIENT_SECRET'])
 
     # Exchange the short-lived token for a long-lived token.    
     url = ("https://graph.facebook.com/v2.9/oauth/access_token?"
